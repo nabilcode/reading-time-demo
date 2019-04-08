@@ -18,21 +18,34 @@ To control which stages you want, please add an environment variable if you want
  - DEMO_DISABLE_PROD=true
  - DEMO_DISABLE_ARTIFACTORY=true
  - DEMO_DISABLE_BINTRAY=true
+ - DEMO_DISABLE_MAVEN_CACHE=true
 
 Please also add the following credentials to the global domain of your organization's folder:
 - Heroku API key as secret text with ID 'HEROKU_API_KEY'
 - GitHub Token value as secret text with ID 'GITHUB_TOKEN'
 
 */
-
-podTemplate(
-  name: 'test-pod',
-  label: 'test-pod',
-  containers: [
-    containerTemplate(name: 'mvn', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
-  ],
-  {
-    node ('test-pod') {
+def label = "mypod-${UUID.randomUUID().toString()}"
+podTemplate(label: label, yaml: """
+spec:
+      containers:
+      - name: mvn
+        image: maven:3.3.9-jdk-8-alpine
+        command:
+        - cat
+        tty: true
+        volumeMounts:
+        - mountPath: /cache
+          name: maven-cache
+      volumes:
+      - name: maven-cache
+        hostPath:
+          # directory location on host
+          path: /tmp
+          type: Directory
+""",
+{
+    node (label) {
       container ('mvn') {
         printOptions()
         server = Artifactory.server "artifactory"
@@ -349,7 +362,7 @@ def mvn(args) {
             //mavenLocalRepo: '.repository'
     ) {
         // Run the maven build
-        sh "mvn $args -Dmaven.test.failure.ignore"
+        sh ("mvn $args -Dmaven.test.failure.ignore " + ((env.DEMO_DISABLE_MAVEN_CACHE == "true")?"":"-Dmaven.repo.local=/cache"))
     }
 }
 
