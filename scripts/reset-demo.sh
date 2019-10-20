@@ -9,6 +9,13 @@
 # It would be awesome if the bellow used like arrays and data structures, but then again this is bash :(
 
 #!/usr/bin/bash
+
+export RT_PM_TOKEN=$GITHUB_TOKEN
+export RT_UX_TOKEN=$GITHUB_TOKEN
+export RT_DS_TOKEN=$GITHUB_TOKEN
+export RT_ORG=engineering
+export RT_REPO=reading-time-demo
+
 echo "Re-setting Demo"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DEFAULT_FEATURE_BRANCH="add-rating-feature"
