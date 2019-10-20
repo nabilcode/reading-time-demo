@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 function statuses () {
-  curl -s -H "Authorization: Token $GITHUB_TOKEN" -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"state": "'"$1"'","target_url": "https://reading-time-app.herokuapp.com/","description": "'"$2"'"}' https://octodemo.com/api/v3/repos/office-tools/reading-time-app/deployments/$deployment_id/statuses
+  curl -s -H "Authorization: Token $GITHUB_TOKEN" -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"state": "'"$1"'","target_url": "https://library-time.herokuapp.com/","description": "'"$2"'"}' https://octodemo.com/api/v3/repos/engineering/reading-time-demo/deployments/$deployment_id/statuses
 }
 
 : ${GITHUB_TOKEN?"Please set environment variable GITHUB_TOKEN to the GitHub access token"}
@@ -11,7 +11,7 @@ read -p  "Do you want to deploy branch '$BRANCH' (y/N)?" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  deployment_id=$(curl -s -H "Authorization: Token $GITHUB_TOKEN" -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"ref": "'"$BRANCH"'","description": "Deploying branch to test", "environment": "test"}' https://octodemo.com/api/v3/repos/office-tools/reading-time-app/deployments | jq '.id')
+  deployment_id=$(curl -s -H "Authorization: Token $GITHUB_TOKEN" -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"ref": "'"$BRANCH"'","description": "Deploying branch to test", "environment": "test"}' https://octodemo.com/api/v3/repos/engineering/reading-time-demo/deployments | jq '.id')
   echo "Deployment ID: $deployment_id"
   if (($deployment_id == null))
   then
