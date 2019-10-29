@@ -1,6 +1,6 @@
 # Reading Time
 Reading Time is a web application that lists staff recommended books.
-test pipeline
+test pipeline and boards
 ## Installing
 
 ### Prerequisites
